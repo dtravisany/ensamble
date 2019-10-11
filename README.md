@@ -68,7 +68,7 @@ Antes de correr `Celera`, necesitamos generar los archivos de entrada y configur
 
 Archivos frg:
 
-`Celera` no recibe directamente archivos [FASTQ]() como input, necesita un archivo del tipo [fragmentos](http://wgs-assembler.sourceforge.net/wiki/index.php/FRG_Files) , el cual contiene la descripción de las lecturas a ensamblar. 
+`Celera` no recibe directamente archivos [FASTQ](https://en.wikipedia.org/wiki/FASTQ_format) como input, necesita un archivo del tipo [fragmentos](http://wgs-assembler.sourceforge.net/wiki/index.php/FRG_Files) , el cual contiene la descripción de las lecturas a ensamblar. 
 
 Existe un comando en `Celera` que nos permite hacer la transformación de FASTQ a fragmentos `frg` denominado `fastqToCA` (fastq to Celera Assembler, [link a fastqToCA](http://wgs-assembler.sourceforge.net/wiki/index.php/FastqToCA)).
 
@@ -161,14 +161,14 @@ Los ensambles generan un archivo de estadísticas. En este archivo podremos ver 
 resultados cuantitativos del ensamble.
 
 En el caso de Celera el nombre del archivo se encuentra en `celera_ensamble/9-terminator/primer_ensamble.qc`.
-Para revisarlo puede utilizar `less`:
+Para revisarlo puede utilizar [less](https://linux.die.net/man/1/less):
 
 		less celera_ensamble/9-terminator/primer_ensamble.qc
 
 
 En el caso de velvet este documento se encuentra en la carpeta de salida bajo el nombre de `stats.txt`.
 
-Para este práctico he desarrollado un script en `perl` que calcula los stats primarios de un ensamble en base al resultado de los archivos de contigs.
+Para este práctico he desarrollado un [script](https://es.wikipedia.org/wiki/Script) en [perl](https://www.perl.org/) que calcula los stats primarios de un ensamble en base al resultado de los archivos de contigs.
  
 Para el ensamble de velvet ejecutar:
 
@@ -192,11 +192,11 @@ Existen diferencias?
 
 Antes de poder anotar, necesitamos realizar la predicción de nuestros `CDS` para eso utilizaremos `Glimmer3.02`. 
 
-`Glimmer` se ejecuta para un `FASTA` que contiene solo una secuencia, es decir, si tenemos más de una secuencia en un `FASTA`, Glimmer Haría la predicción de la primera secuencia. Para resolver, esto he programado un pipeline en `perl` que puede ejecutar de la siguiente manera:
+`Glimmer` se ejecuta para un [FASTA](https://es.wikipedia.org/wiki/Formato_FASTA) que contiene solo una secuencia, es decir, si tenemos más de una secuencia en un `FASTA`, `Glimmer` solo procesaría la primera secuencia. Para resolver, esto he programado un [pipeline](https://en.wikipedia.org/wiki/Pipeline_(computing)) en `perl` que puede ejecutar de la siguiente manera:
 
 	pipe2gbk.pl -i velvet_ensamble/contigs.fa -p peptidos_velvet
 
-Para Celera:
+Para `Celera`:
 
 	pipe2gbk.pl -i celera_ensamble/contigs.fa -p peptidos_celera
 
@@ -206,7 +206,7 @@ Por ahora continuaremos trabajando solo con los péptidos.
 
 ### Anotación
 
-Como BLAST demora en anotar sus péptidos, es necesario que ejecute esta instrucción en un `screen`, puede utilizar alguno de los screen anteriores o crear uno nuevo utilizando el comando:
+Como `BLAST` demora en anotar sus péptidos, es necesario que ejecute esta instrucción en un `screen`, puede utilizar alguno de los `screen` anteriores o crear uno nuevo utilizando el comando:
 
 	screen -S blast
 
@@ -225,6 +225,6 @@ Para obtener los resultados debe direccionar la `salida estándar` a un archivo 
 
 	blastparser.pl velvet_blast.txt > parsed_velvet_blast.csv
 
-Debe hacer lo mismo para el archivo de `celera`.
+Debe hacer lo mismo para el archivo de `Celera`.
 
 
