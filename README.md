@@ -4,9 +4,23 @@ Práctico de Ensamble
 
 ## Resumen
 
-En este práctico vamos a ensamblar un genoma bacteriano utilizando los programas [Celera/wgs-assembler](http://wgs-assembler.sourceforge.net/wiki/index.php?title=Main_Page) y [Velvet](https://www.ebi.ac.uk/~zerbino/velvet/). 
+En este práctico vamos a ensamblar un genoma bacteriano, revisaremos las diversas métricas de ensamble y evaluaremos la calidad de un ensamble `de novo` utilizando los dos paradigmas más empleados en ensamble. A cada ensamble le realizaremos la predicción y posterior anotación de los genes.
 
-Luego, realizaremos la predicción de [CDS](https://www.uniprot.org/help/cds_protein_definition) a partir de los ensambles con la herramienta [Glimmer3.02](http://ccb.jhu.edu/software/glimmer/index.shtml) y, finalmente, a los péptidos predichos con Glimmer, se les asignará función putativa con el programa BLAST y la base de datos [Swiss-Prot](https://www.uniprot.org/statistics/Swiss-Prot).
+
+## Materiales
+
+Utilizaremos los programas de ensamble:
+- [Celera/wgs-assembler](http://wgs-assembler.sourceforge.net/wiki/index.php?title=Main_Page)
+- [Velvet](https://www.ebi.ac.uk/~zerbino/velvet/). 
+
+
+
+Luego, realizaremos la predicción de [CDS](https://www.uniprot.org/help/cds_protein_definition) a partir de los ensambles con la herramienta:
+- [Glimmer3.02](http://ccb.jhu.edu/software/glimmer/index.shtml)
+
+Finalmente, a los péptidos predichos con Glimmer, se les asignará función putativa con el programa [BLAST+](https://blast.ncbi.nlm.nih.gov/Blast.cgi?CMD=Web&PAGE_TYPE=BlastDocs&DOC_TYPE=Download) y la base de datos [Swiss-Prot](https://www.uniprot.org/statistics/Swiss-Prot).
+
+#### Input de datos:
 
  Cada grupo tendrá dos sets de lecturas de secuenciación, correspondientes a un genoma desconocido, el cual tendrán que inferir con los análisis.
 
@@ -15,8 +29,6 @@ Luego, realizaremos la predicción de [CDS](https://www.uniprot.org/help/cds_pro
 - Familiarizarse con los conceptos de ensamble y anotación.
 - Conocer el funcionamiento de herramientas bioinformáticas de ensamble y anotación.
 - Adquirir práctica en entorno Unix. 
-
-
 
 
 ## Trabajo preliminar:
@@ -160,7 +172,6 @@ Para el ensamble de celera ejecutar:
 
 
 
-
 ## Predicción y Anotación
 
 
@@ -190,12 +201,11 @@ En este screen debe ejecutar la instrucción:
 
 	blastp -db /home/dbioA/databases/SWISSPROT/uniprot_sprot.fasta -query peptidos_velvet.faa -out velvet_blast.txt -evalue 1e-5 -num_threads 4
 
-Realizar el mismo comando pero ahora con los resultados de `celera`.
+Repetir el mismo comando, pero ahora con los resultados de `celera`.
 
 
-
-Ahora tenemos dos archivos velvet_blast.txt y celera_blast.txt, ambos contienen los alineamientos en formato raw,
- pero deben ser "parseados" para poder realizar analisis posteriores (Por ejemplo: tener un excel con la anotación),
+Nos generará dos archivos: `velvet_blast.txt` y `celera_blast.txt`, ambos contienen los alineamientos en formato raw,
+ pero deben ser "parseados" para poder realizar análisis posteriores (Por ejemplo: tener un excel con la anotación),
  para esto he generado un parseador que se llama `blastparser.pl` y esta basado en los módulos [Bio::SearchIO](https://metacpan.org/pod/Bio::SearchIO)
  y [Bio::SeqIO](https://metacpan.org/pod/Bio::SeqIO) de [BioPerl](https://bioperl.org/).
 
