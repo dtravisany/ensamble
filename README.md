@@ -35,12 +35,14 @@ Finalmente, a los péptidos predichos con Glimmer, se les asignará función put
 
 Conectarse al servidor.
 
-Debido a que los cálculos que realizaremos en este práctico requieren un poder de cómputo moderado, nos conectaremos a uno de los servidores de [Mathomics](http://www.mathomics.cl). Si están en `Linux/MacOS`, puede utilizar la terminal (consola) estándar.
+Debido a que los cálculos que realizaremos en este práctico requieren un poder de cómputo moderado, nos conectaremos a uno de los servidores de [Mathomics](http://www.mathomics.cl). Si están en `Linux/MacOS` o `Windows 10`, puede utilizar la terminal (consola) estándar (Windows10 `cmd`).
 
-Si están en Windows (anterior a Windows 10) deben instalar un programa llamado `Putty`. Una vez abierta la terminal, cada grupo debe escribir lo siguiente:
+
+Una vez abierta la terminal, cada grupo debe escribir lo siguiente:
 
 	 ssh  usuario@servidor
 
+Si están en Windows (anterior a Windows 10) deben instalar un programa llamado [Putty](https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html). 
 
 
 Las credenciales se les entregaran en la pizarra. 
@@ -155,7 +157,10 @@ contigs/scaffolds se llama `velvetg`.
 Los ensambles generan un archivo de estadísticas. En este archivo podremos ver los
 resultados cuantitativos del ensamble.
 
-En el caso de Celera el nombre del archivo es `sssss` y se encuentra en la carpeta `` 
+En el caso de Celera el nombre del archivo se encuentra en `celera_ensamble/9-terminator/primer_ensamble.qc`.
+Para revisarlo puede utilizar `less`:
+
+		less celera_ensamble/9-terminator/primer_ensamble.qc
 
 
 En el caso de velvet este documento se encuentra en la carpeta de salida bajo el nombre de `stats.txt`.
@@ -164,12 +169,16 @@ Para este práctico he desarrollado un script en `perl` que calcula los stats pr
  
 Para el ensamble de velvet ejecutar:
 
-	make_stats.pl  -i velvet_ensamble/contigs.fa
+	make_stats.pl -i velvet_ensamble/contigs.fa
 
 Para el ensamble de celera ejecutar:
 
-	make_stats.pl ....
+	make_stats.pl -i celera_ensamble/9-terminator/primer_ensamble.scf.fasta
 
+También lo puede ejecutar sobre el archivo de contigs:
+	make_stats.pl -i celera_ensamble/9-terminator/primer_ensamble.ctg.fasta
+
+Existen diferencias?
 
 
 ## Predicción y Anotación
@@ -203,13 +212,16 @@ En este screen debe ejecutar la instrucción:
 
 Repetir el mismo comando, pero ahora con los resultados de `celera`.
 
-
 Nos generará dos archivos: `velvet_blast.txt` y `celera_blast.txt`, ambos contienen los alineamientos en formato raw,
  pero deben ser "parseados" para poder realizar análisis posteriores (Por ejemplo: tener un excel con la anotación),
  para esto he generado un parseador que se llama `blastparser.pl` y esta basado en los módulos [Bio::SearchIO](https://metacpan.org/pod/Bio::SearchIO)
  y [Bio::SeqIO](https://metacpan.org/pod/Bio::SeqIO) de [BioPerl](https://bioperl.org/).
 
+Para obtener los resultados debe direccionar la `salida estándar` a un archivo de la siguiente manera:
 
+	blastparser.pl velvet_blast.txt > parsed_velvet_blast.csv
+
+Debe hacer lo mismo para el archivo de `celera`.
 
 
 
