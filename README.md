@@ -68,8 +68,9 @@ Antes de correr `Celera`, necesitamos generar los archivos de entrada y configur
 
 Archivos frg:
 
-`Celera` no recibe directamente archivos `FASTQ` como input, necesita un archivo del tipo `fragmentos`, el cual contiene la descripción de las lecturas a ensamblar. 
-Existe un comando en `Celera` que nos permite hacer la transformación de FASTQ a fragmentos `frg` denominado `fastqToCA` (fastq to Celera Assembler).
+`Celera` no recibe directamente archivos [FASTQ]() como input, necesita un archivo del tipo [fragmentos](http://wgs-assembler.sourceforge.net/wiki/index.php/FRG_Files) , el cual contiene la descripción de las lecturas a ensamblar. 
+
+Existe un comando en `Celera` que nos permite hacer la transformación de FASTQ a fragmentos `frg` denominado `fastqToCA` (fastq to Celera Assembler, [link a fastqToCA](http://wgs-assembler.sourceforge.net/wiki/index.php/FastqToCA)).
 
 	fastqToCA -insertsize 180 18 -libraryname over -type illumina -technology illumina -mates  gN.over.A.fastq,gN.over.B.fastq > gN.over.frg
 
@@ -102,6 +103,8 @@ nos pondrá en modo comandos) , luego la tecla `:` (permite escribir comandos) y
 finalmente escribimos `wq` (w: write, q:quit ) y presionamos `Enter` (Ejecutar)
 
 
+Una lista completa de las opciones de `Celera` las puede encontrar [acá](http://wgs-assembler.sourceforge.net/wiki/index.php/RunCA#Global_Options)
+
 #### Ensamblar las lecturas:
 
 Debido a que el proceso de ensamblar lecturas puede tomar un tiempo prolongado,
@@ -109,12 +112,12 @@ ejecutar el comando de ensamble de la manera habitual es inconveniente, ya que s
 cerramos la ventana de la consola, el proceso terminará también, por ende,
 tendríamos que esperar que el ensamble terminara para cerrar la consola. En el caso
 de que nos desconectaramos de internet/red, perderíamos lo que llevamos
-ejecutando. Una solución a este problema es la comando screen.
+ejecutando. Una solución a este problema es el comando [screen](https://linux.die.net/man/1/screen).
 
 
 		screen -S gN_celera
 
-Luego, Ejecutamos el comando runCA de Celera para ensamblar:
+Luego, Ejecutamos el comando [runCA](http://wgs-assembler.sourceforge.net/wiki/index.php/RunCA) de `Celera` para ensamblar:
 
 
 		runCA -d celera_asm -p primer_ensamble -s celera.specf
@@ -176,6 +179,7 @@ Para el ensamble de celera ejecutar:
 	make_stats.pl -i celera_ensamble/9-terminator/primer_ensamble.scf.fasta
 
 También lo puede ejecutar sobre el archivo de contigs:
+
 	make_stats.pl -i celera_ensamble/9-terminator/primer_ensamble.ctg.fasta
 
 Existen diferencias?
@@ -222,6 +226,5 @@ Para obtener los resultados debe direccionar la `salida estándar` a un archivo 
 	blastparser.pl velvet_blast.txt > parsed_velvet_blast.csv
 
 Debe hacer lo mismo para el archivo de `celera`.
-
 
 
