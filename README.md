@@ -6,7 +6,7 @@ Práctico de Ensamble
 
 En este práctico vamos a ensamblar un genoma bacteriano utilizando los programas [Celera/wgs-assembler](http://wgs-assembler.sourceforge.net/wiki/index.php?title=Main_Page) y [Velvet](https://www.ebi.ac.uk/~zerbino/velvet/). 
 
-Luego, anotaremos los ensambles con [Glimmer3.02](http://ccb.jhu.edu/software/glimmer/index.shtml) y, finalmente, a los péptidos predichos con Glimmer, se les asignará función putativa con el programa BLAST y la base de datos [Swiss-Prot](https://www.uniprot.org/statistics/Swiss-Prot).
+Luego, realizaremos la predicción de [CDS](https://www.uniprot.org/help/cds_protein_definition) a partir de los ensambles con la herramienta [Glimmer3.02](http://ccb.jhu.edu/software/glimmer/index.shtml) y, finalmente, a los péptidos predichos con Glimmer, se les asignará función putativa con el programa BLAST y la base de datos [Swiss-Prot](https://www.uniprot.org/statistics/Swiss-Prot).
 
  Cada grupo tendrá dos sets de lecturas de secuenciación, correspondientes a un genoma desconocido, el cual tendrán que inferir con los análisis.
 
@@ -61,7 +61,7 @@ Existe un comando en `Celera` que nos permite hacer la transformación de FASTQ 
 
 Generar uno para la librería Jump:
 
-	fastqToCA -insertsize 3000 300 -libraryname jump -type illumina -technology illumina -mates  gN.jump3kb.A.fastq,gN.jump3kb.B.fastq > gN.jump.frg
+	fastqToCA -insertsize 3000 300 -libraryname jump -type illumina -technology illumina -mates  gN.jump3kb.A.fastq,gN.jump3kb.B.fastq > gN.jump3kb.frg
 
 
 Generar archivos de configuración:
@@ -125,36 +125,80 @@ entregarle el nombre de la carpeta donde se guardaran los archivos, el largo del
 `k-mer` para la construcción del grafo, el tipo de librería que se esta utilizando 
 (en este caso pareadas) y la lista de lecturas a ensamblar.
 
-	velveth velvet_ensamble 31 -shortPaired -fastq -separate g2.jump3kb.A.fastq g2.jump3kb.B.fastq  g2.over.A.fastq g2.over.B.fastq
+	velveth velvet_ensamble 31 -shortPaired -fastq -separate gN.jump3kb.A.fastq gN.jump3kb.B.fastq  gN.over.A.fastq gN.over.B.fastq
 
 
 ## Obtener los contigs
 
 
 Los contigs son obtenidos resolviendo los maximal unary paths o unitigs en el
-grafo de Bruijn. El concepto de “resolver” unitigs hacer referencia ala búsqueda de
-caminos Eulerianos dentro del grafo. El comando de velvet para construir los
+grafo de Bruijn. El concepto de "resolver" unitigs hacer referencia a la búsqueda de [caminos eulerianos](https://es.wikipedia.org/wiki/Ciclo_euleriano) dentro del grafo. El comando de velvet para construir los
 contigs/scaffolds se llama `velvetg`.
 
-	velvetg velvet_ASM -min_contig_lgth 1000
+	velvetg velvet_ensamble -min_contig_lgth 1000
 
 
 ### Revisar los ensambles:
 
-Los ensambles generar un archivo de estadísticas. En este archivo podremos ver los
+Los ensambles generan un archivo de estadísticas. En este archivo podremos ver los
 resultados cuantitativos del ensamble.
+
+En el caso de Celera el nombre del archivo es `sssss` y se encuentra en la carpeta `` 
+
 
 En el caso de velvet este documento se encuentra en la carpeta de salida bajo el nombre de `stats.txt`.
 
 Para este práctico he desarrollado un script en `perl` que calcula los stats primarios de un ensamble en base al resultado de los archivos de contigs.
  
-	
+Para el ensamble de velvet ejecutar:
+
+	make_stats.pl  -i velvet_ensamble/contigs.fa
+
+Para el ensamble de celera ejecutar:
+
+	make_stats.pl ....
 
 
-# Anotación
 
-Como vimos en clase, en el proceso de anotación de un genoma necesitamos 
-	
+
+## Predicción y Anotación
+
+
+### Predicción de CDS
+
+Antes de poder anotar, necesitamos realizar la predicción de nuestros `CDS` para eso utilizaremos `Glimmer3.02`. 
+
+`Glimmer` se ejecuta para un `FASTA` que contiene solo una secuencia, es decir, si tenemos más de una secuencia en un `FASTA`, Glimmer Haría la predicción de la primera secuencia. Para resolver, esto he programado un pipeline en `perl` que puede ejecutar de la siguiente manera:
+
+	pipe2gbk.pl -i velvet_ensamble/contigs.fa -p peptidos_velvet
+
+Para Celera:
+
+	pipe2gbk.pl -i celera_ensamble/contigs.fa -p peptidos_celera
+
+Para cada ensamble obtendrá dos archivos `peptidos_velvet.faa` y `peptidos_velvet.gbk`. Lo mismo para el caso de `celera`. 
+
+Por ahora continuaremos trabajando solo con los péptidos.
+
+### Anotación
+
+Como BLAST demora en anotar sus péptidos, es necesario que ejecute esta instrucción en un `screen`, puede utilizar alguno de los screen anteriores o crear uno nuevo utilizando el comando:
+
+	screen -S blast
+
+En este screen debe ejecutar la instrucción:
+
+	blastp -db /home/dbioA/databases/SWISSPROT/uniprot_sprot.fasta -query peptidos_velvet.faa -out velvet_blast.txt -evalue 1e-5 -num_threads 4
+
+Realizar el mismo comando pero ahora con los resultados de `celera`.
+
+
+
+Ahora tenemos dos archivos velvet_blast.txt y celera_blast.txt, ambos contienen los alineamientos en formato raw,
+ pero deben ser "parseados" para poder realizar analisis posteriores (Por ejemplo: tener un excel con la anotación),
+ para esto he generado un parseador que se llama `blastparser.pl` y esta basado en los módulos [Bio::SearchIO](https://metacpan.org/pod/Bio::SearchIO)
+ y [Bio::SeqIO](https://metacpan.org/pod/Bio::SeqIO) de [BioPerl](https://bioperl.org/).
+
 
 
 
