@@ -1,7 +1,25 @@
 # ensamble
 Práctico de Ensamble
 
-Trabajo preliminar:
+
+## Resumen
+
+En este práctico vamos a ensamblar un genoma bacteriano utilizando los programas [Celera/wgs-assembler](http://wgs-assembler.sourceforge.net/wiki/index.php?title=Main_Page) y [Velvet](https://www.ebi.ac.uk/~zerbino/velvet/). 
+
+Luego, anotaremos los ensambles con [Glimmer3.02](http://ccb.jhu.edu/software/glimmer/index.shtml) y, finalmente, a los péptidos predichos con Glimmer, se les asignará función putativa con el programa BLAST y la base de datos [Swiss-Prot](https://www.uniprot.org/statistics/Swiss-Prot).
+
+ Cada grupo tendrá dos sets de lecturas de secuenciación, correspondientes a un genoma desconocido, el cual tendrán que inferir con los análisis.
+
+## Objetivos del Práctico: 
+
+- Familiarizarse con los conceptos de ensamble y anotación.
+- Conocer el funcionamiento de herramientas bioinformáticas de ensamble y anotación.
+- Adquirir práctica en entorno Unix. 
+
+
+
+
+## Trabajo preliminar:
 
 Conectarse al servidor.
 
@@ -17,7 +35,7 @@ Las credenciales se les entregaran en la pizarra.
 En el nombre de usuario y la contraseña, la `N` debe
 ser reemplazada por el número del grupo que fue asignado.
 
-Nombre de las carpetas:
+#### Nombre de las carpetas:
 
 Al conectarnos al servidor, entramos directamente al directorio de trabajo.
 En este directorio están los archivos de lecturas de secuenciación que se le
@@ -26,17 +44,17 @@ Para poder ver estos archivos debemos escribir lo siguiente:
 
 	ls
 
-Ensamble de Genomas:
+## Ensamble de Genomas:
 
-Celera - wgs-assembler - Canu
+### Celera - wgs-assembler - Canu
 
-[Celera]() es un ensamblador que utiliza [OLC](). Consta de una fase de corrección de lecturas, una de sobrelape, de generación de contigs y finalmente de scaffolding. 
+[Celera](http://wgs-assembler.sourceforge.net/wiki/index.php?title=Main_Page) es un ensamblador que utiliza [OLC](https://www.ncbi.nlm.nih.gov/pubmed/22184334). Consta de una fase de corrección de lecturas, una de sobrelape, de generación de contigs y finalmente de scaffolding. 
 
 Antes de correr `Celera`, necesitamos generar los archivos de entrada y configuración.
 
 Archivos frg:
 
-Celera no recibe directamente archivos FASTQ como input, necesita un archivo del tipo `fragmentos`, el cual contiene la descripción de las lecturas a ensamblar. 
+`Celera` no recibe directamente archivos `FASTQ` como input, necesita un archivo del tipo `fragmentos`, el cual contiene la descripción de las lecturas a ensamblar. 
 Existe un comando en `Celera` que nos permite hacer la transformación de FASTQ a fragmentos `frg` denominado `fastqToCA` (fastq to Celera Assembler).
 
 	fastqToCA -insertsize 180 18 -libraryname over -type illumina -technology illumina -mates  gN.over.A.fastq,gN.over.B.fastq > gN.over.frg
@@ -48,9 +66,8 @@ Generar uno para la librería Jump:
 
 Generar archivos de configuración:
 	
-Además de los archivos de fragmentos, Celera necesita un archivo con la
+Además de los archivos de fragmentos, `Celera` necesita un archivo con la
 configuración del ensamble (Parámetros). Para crear este archivo ejecutamos:
-
 
 		vim celera.specf
 
@@ -71,7 +88,7 @@ nos pondrá en modo comandos) , luego la tecla `:` (permite escribir comandos) y
 finalmente escribimos `wq` (w: write, q:quit ) y presionamos `Enter` (Ejecutar)
 
 
-Ensamblar las lecturas:
+#### Ensamblar las lecturas:
 
 Debido a que el proceso de ensamblar lecturas puede tomar un tiempo prolongado,
 ejecutar el comando de ensamble de la manera habitual es inconveniente, ya que si
@@ -90,42 +107,55 @@ Luego, Ejecutamos el comando runCA de Celera para ensamblar:
 
 
 Para cerrar la consola sin matar el proceso, tecleamos `Ctrl`+ `a` + `d`. 
+
 Si queremos recuperar la consola donde lanzamos el programa 
 escribimos lo siguiente:
-
 
 		screen -r gN_celera
 
 
+### Velvet
 
-Velvet
+`Velvet` es un ensamblador de lecturas cortas, por ende, utiliza el [grafo de Bruijn](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5531759/).
 
-Velvet es un ensamblardor de lecturas cortas, por ende, utiliza el grafo de Bruijn.
-
-Generar Grafo de Bruijn
+#### Generar Grafo de Bruijn:
 
 El comando para generar el grafo de Bruijn se llama `velveth`. Como input, debemos
 entregarle el nombre de la carpeta donde se guardaran los archivos, el largo del 
 `k-mer` para la construcción del grafo, el tipo de librería que se esta utilizando 
 (en este caso pareadas) y la lista de lecturas a ensamblar.
 
+	velveth velvet_ensamble 31 -shortPaired -fastq -separate g2.jump3kb.A.fastq g2.jump3kb.B.fastq  g2.over.A.fastq g2.over.B.fastq
 
-Obtener los contigs
+
+## Obtener los contigs
 
 
-Los contigs son obtenidos resolviendo los >maximal unary paths o unitigs en el
+Los contigs son obtenidos resolviendo los maximal unary paths o unitigs en el
 grafo de Bruijn. El concepto de “resolver” unitigs hacer referencia ala búsqueda de
-caminos Eulerianos dentro del grafo. El comando de velvet para onstruirs los
-contigs/scaffolds se llama velvetg.
+caminos Eulerianos dentro del grafo. El comando de velvet para construir los
+contigs/scaffolds se llama `velvetg`.
+
+	velvetg velvet_ASM -min_contig_lgth 1000
 
 
-Revisar los ensambles:
+### Revisar los ensambles:
 
 Los ensambles generar un archivo de estadísticas. En este archivo podremos ver los
 resultados cuantitativos del ensamble.
-Resultados de Velvet:
 
-Debemos entrar ala carpeta del ensamble. En este caso el archivo de estadísticas se
-llama “stats.txt”.
+En el caso de velvet este documento se encuentra en la carpeta de salida bajo el nombre de `stats.txt`.
+
+Para este práctico he desarrollado un script en `perl` que calcula los stats primarios de un ensamble en base al resultado de los archivos de contigs.
+ 
+	
+
+
+# Anotación
+
+Como vimos en clase, en el proceso de anotación de un genoma necesitamos 
+	
+
+
 
 
