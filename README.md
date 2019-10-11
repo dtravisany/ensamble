@@ -24,6 +24,10 @@ Finalmente, a los péptidos predichos con Glimmer, se les asignará función put
 
  Cada grupo tendrá dos sets de lecturas de secuenciación, correspondientes a un genoma desconocido, el cual tendrán que inferir con los análisis.
 
+- Over: [Librería Overlapping](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2336810/) (Inserto:180 bp, Reads Length:100 bp) tiene un sobrelape entre el read forward y el read reverse, dado que el tamaño del inserto es menor que el de la suma del par de reads.
+
+- Jumping: [Librería Jumping](https://en.wikipedia.org/wiki/Jumping_library#Paired-end_sequencing) (Inserto: 3000 bp,Reads Length: 100 bp) se utilizan para sobrepasar repeticiones y generar scaffolds en un ensamble.
+ 
 ## Objetivos del Práctico: 
 
 - Familiarizarse con los conceptos de ensamble y anotación.
@@ -35,7 +39,7 @@ Finalmente, a los péptidos predichos con Glimmer, se les asignará función put
 
 Conectarse al servidor.
 
-Debido a que los cálculos que realizaremos en este práctico requieren un poder de cómputo moderado, nos conectaremos a uno de los servidores de [Mathomics](http://www.mathomics.cl). Si están en `Linux/MacOS` o `Windows 10`, puede utilizar la terminal (consola) estándar (Windows10 `cmd`).
+Debido a que los cálculos que realizaremos en este práctico requieren un poder de cómputo moderado, nos conectaremos a uno de los servidores de [Mathomics](http://www.mathomics.cl). Si están en `Linux/MacOS` o `Windows 10`, puede utilizar la terminal (consola), en (Windows10 en el [Símbolo del sistema](https://es.wikipedia.org/wiki/S%C3%ADmbolo_del_sistema) (`cmd`).
 
 
 Una vez abierta la terminal, cada grupo debe escribir lo siguiente:
@@ -86,7 +90,7 @@ configuración del ensamble (Parámetros). Para crear este archivo ejecutamos:
 
 		vim celera.specf
 
-Aparecerá un editor de texto (Vim: Vi Improved, Vi: Visual). Presionamos la tecla “i”
+Aparecerá un editor de texto ([Vim](https://www.vim.org/): Vi Improved, Vi: Visual). Presionamos la tecla “i”
 (insert text) y escribimos lo siguiente:
 
 		ovlHashBits=23
