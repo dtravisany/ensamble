@@ -164,10 +164,10 @@ contigs/scaffolds se llama `velvetg`.
 Los ensambles generan un archivo de estadísticas. En este archivo podremos ver los
 resultados cuantitativos del ensamble.
 
-En el caso de Celera el nombre del archivo se encuentra en `celera_ensamble/9-terminator/primer_ensamble.qc`.
+En el caso de Celera el nombre del archivo se encuentra en `celera_asm/9-terminator/primer_ensamble.qc`.
 Para revisarlo puede utilizar [less](https://linux.die.net/man/1/less):
 
-		less celera_ensamble/9-terminator/primer_ensamble.qc
+		less celera_asm/9-terminator/primer_ensamble.qc
 
 
 En el caso de velvet este documento se encuentra en la carpeta de salida bajo el nombre de `stats.txt`.
@@ -180,11 +180,11 @@ Para el ensamble de velvet ejecutar:
 
 Para el ensamble de celera ejecutar:
 
-	make_stats.pl -i celera_ensamble/9-terminator/primer_ensamble.scf.fasta
+	make_stats.pl -i celera_asm/9-terminator/primer_ensamble.scf.fasta
 
 También lo puede ejecutar sobre el archivo de contigs:
 
-	make_stats.pl -i celera_ensamble/9-terminator/primer_ensamble.ctg.fasta
+	make_stats.pl -i celera_asm/9-terminator/primer_ensamble.ctg.fasta
 
 Existen diferencias?
 
@@ -202,7 +202,7 @@ Antes de poder anotar, necesitamos realizar la predicción de nuestros `CDS` par
 
 Para `Celera`:
 
-	pipe2gbk.pl -i celera_ensamble/contigs.fa -p peptidos_celera
+	pipe2gbk.pl -i celera_asm/9-terminator/primer_ensamble.scf.fasta -p peptidos_celera
 
 Para cada ensamble obtendrá dos archivos `peptidos_velvet.faa` y `peptidos_velvet.gbk`. Lo mismo para el caso de `celera`. 
 
